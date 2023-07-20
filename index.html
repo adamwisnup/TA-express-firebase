@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Data API</title>
+  </head>
+  <body>
+    <h1>Data dari REST API</h1>
+    <div id="students-container"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+      axios
+        .get("http://localhost:8080/api/sensor")
+        .then(function (response) {
+          var students = response.data;
+
+          var lastUserId = null; // Variabel untuk menyimpan ID pengguna terakhir
+          var lastUser = null; // Variabel untuk menyimpan data pengguna terakhir
+
+          students.forEach(function (student) {
+            // Mencatat ID pengguna terakhir saat iterasi melalui data pengguna
+            lastUserId = student.id;
+
+            // Simpan data pengguna terakhir saat iterasi melalui data pengguna
+            lastUser = student;
+          });
+
+          // Jika ada ID pengguna terakhir yang ditemukan, tampilkan data pengguna terakhir
+          if (lastUserId) {
+            // Template HTML untuk menampilkan data pengguna terakhir
+            var studentHtml = "";
+            studentHtml += "<p>id: " + lastUser.id + "</p>";
+            studentHtml += "<p>Sensor Hujan: " + lastUser.sensor_air + "</p>";
+            studentHtml +=
+              "<p>Sensor Ultrasonik: " + lastUser.sensor_ultrasonik + "</p>";
+
+            var studentsContainer =
+              document.getElementById("students-container");
+            studentsContainer.innerHTML = studentHtml;
+          }
+        })
+        .catch(function (error) {
+          console.error("Gagal mengambil data dari API:", error);
+        });
+    </script>
+  </body>
+</html>
